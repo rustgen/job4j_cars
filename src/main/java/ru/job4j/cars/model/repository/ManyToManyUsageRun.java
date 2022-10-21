@@ -12,8 +12,7 @@ import ru.job4j.cars.model.User;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class ToManyUsageRun {
-
+public class ManyToManyUsageRun {
     public static void main(String[] args) {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure().build();
@@ -23,6 +22,10 @@ public class ToManyUsageRun {
             user.setLogin("ADMIN");
             user.setPassword("PASSWORD");
             create(user, sf);
+            var user2 = new User();
+            user2.setLogin("USER");
+            user2.setPassword("PASSWORDUser");
+            create(user2, sf);
             var post = new Post();
             post.setText("TEXT");
             post.setHistories(List.of(
@@ -30,12 +33,16 @@ public class ToManyUsageRun {
                     new PriceHistory(0, 300, 250, LocalDateTime.now())
             ));
             post.setUser(user);
+            post.setParticipates(List.of(
+                    user, user2
+            ));
             create(post, sf);
-            var stored = sf.openSession()
+            sf.openSession()
                     .createQuery("from Post where id = :fId", Post.class)
                     .setParameter("fId", post.getId())
-                    .getSingleResult();
-            stored.getHistories().forEach(System.out::println);
+                    .getSingleResult()
+                    .getParticipates()
+                    .forEach(System.out::println);
         }  catch (Exception e) {
             e.printStackTrace();
         } finally {
