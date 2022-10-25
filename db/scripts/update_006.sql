@@ -7,6 +7,7 @@ name TEXT
 CREATE TABLE IF NOT EXISTS car (
 id SERIAL PRIMARY KEY,
 name TEXT,
+photo BYTEA,
 engine_id INT not null unique REFERENCES engine(id)
 );
 
