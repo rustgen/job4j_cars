@@ -15,7 +15,7 @@ public class PostRepository {
             From Post p JOIN FETCH p.car WHERE p.created BETWEEN :fYesterday and :fToday
             """;
     private static final String POSTS_WITH_PHOTO = """
-            From Post p JOIN FETCH p.car c WHERE c.photo.size > 0
+            From Post p JOIN FETCH p.car c WHERE c.photo <> null
             """;
     private static final String POSTS_CERTAIN_BRAND = """
             From Post p JOIN FETCH p.car WHERE p.car.model like :fKey
